@@ -1,9 +1,9 @@
 'use client';
 
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 
-export default function PlayerPage() {
+function PlayerContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const moviePath = searchParams.get('movie');
@@ -59,5 +59,17 @@ export default function PlayerPage() {
         </video>
       </div>
     </div>
+  );
+}
+
+export default function PlayerPage() {
+  return (
+    <Suspense fallback={
+      <div className="flex items-center justify-center h-full bg-black text-white">
+        <p>Loading player...</p>
+      </div>
+    }>
+      <PlayerContent />
+    </Suspense>
   );
 }
