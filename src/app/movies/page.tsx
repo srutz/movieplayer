@@ -3,6 +3,9 @@ import * as os from 'node:os';
 import * as path from 'node:path';
 import { MovieCard } from '@/gui/MovieCard';
 
+// Revalidate every 5 minutes as fallback
+export const revalidate = 300;
+
 interface MovieInfo {
   fullPath: string;
   fileName: string;
@@ -20,6 +23,7 @@ interface ScanResult {
 
 
 export default async function MoviesPage() {
+  console.log(">> Rendering MoviesPage");
   const dbPath = path.join(os.homedir(), '.movieplayer', 'database.json');
 
   let scanResult: ScanResult | null = null;

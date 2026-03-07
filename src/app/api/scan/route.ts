@@ -1,6 +1,7 @@
 import * as fs from 'node:fs';
 import * as os from 'node:os';
 import * as path from 'node:path';
+import { revalidatePath } from 'next/cache';
 import { NextResponse } from 'next/server';
 import { scanDirectory } from '@/tools/scanner';
 
@@ -20,6 +21,9 @@ export async function POST() {
     // Write database.json
     const dbPath = path.join(dbDir, 'database.json');
     fs.writeFileSync(dbPath, JSON.stringify(scanResult, null, 2), 'utf-8');
+
+    // Revalidate the movies page to show updated data
+    revalidatePath('/movies');
 
     return NextResponse.json({
       success: true,
