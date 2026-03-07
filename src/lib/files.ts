@@ -53,9 +53,7 @@ export async function getFiles(dirPath: string, filter: (file: FileInfo) => bool
     const filesResults = await Promise.all(filesPromises);
 
     // Filter out null values (files that couldn't be accessed)
-    const files = filesResults.filter(
-      (file): file is FileInfo => file !== null && filter(file),
-    );
+    const files = filesResults.filter((file): file is FileInfo => file !== null && filter(file));
 
     // Sort directories first, then by name
     return files.sort((a, b) => {
@@ -173,11 +171,7 @@ export async function getSystemInfo(): Promise<SystemInfo> {
         }
 
         // Validate parsed numbers
-        if (
-          Number.isNaN(totalBlocks) ||
-          Number.isNaN(usedBlocks) ||
-          Number.isNaN(availableBlocks)
-        ) {
+        if (Number.isNaN(totalBlocks) || Number.isNaN(usedBlocks) || Number.isNaN(availableBlocks)) {
           console.warn(`Skipping drive with invalid numbers: ${line}`);
           continue;
         }
@@ -196,9 +190,7 @@ export async function getSystemInfo(): Promise<SystemInfo> {
       }
     } else if (platform === "win32") {
       // Use wmic on Windows
-      const { stdout } = await execAsync(
-        "wmic logicaldisk get caption,freespace,size /format:csv",
-      );
+      const { stdout } = await execAsync("wmic logicaldisk get caption,freespace,size /format:csv");
       const lines = stdout.trim().split("\n");
 
       for (let i = 1; i < lines.length; i++) {
@@ -212,8 +204,7 @@ export async function getSystemInfo(): Promise<SystemInfo> {
         const freeSpace = Number.parseInt(parts[2], 10);
         const totalSpace = Number.parseInt(parts[3], 10);
 
-        if (!mountPoint || Number.isNaN(freeSpace) || Number.isNaN(totalSpace))
-          continue;
+        if (!mountPoint || Number.isNaN(freeSpace) || Number.isNaN(totalSpace)) continue;
 
         const usedSpace = totalSpace - freeSpace;
         const usePercent = Math.round((usedSpace / totalSpace) * 100);

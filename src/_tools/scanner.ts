@@ -1,15 +1,11 @@
-import { execSync } from 'child_process';
-import crypto from 'crypto';
-import * as fs from 'fs';
-import * as os from 'os';
-import * as path from 'path';
+import * as fs from "node:fs";
+import * as path from "node:path";
 
 interface MovieInfo {
   fullPath: string;
   fileName: string;
   accessRights: string;
   lengthSeconds: number;
-  thumbnailPath?: string;
 }
 
 interface ScanResult {
@@ -51,54 +47,6 @@ function getAccessRights(stats: fs.Stats): string {
   return rights.join('');
 }
 
-function getMovieDuration(filePath: string): number {
-  try {
-    // Use ffprobe to get duration in seconds
-    const result = execSync(
-      `ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 "${filePath}"`,
-      { encoding: 'utf-8', timeout: 5000 }
-    );
-    const duration = parseFloat(result.trim());
-    return Number.isNaN(duration) ? 0 : Math.floor(duration);
-  } catch (error) {
-    console.error(`Failed to get duration for ${filePath}:`, error);
-    return 0;
-  }
-}
-
-function generateThumbnail(filePath: string, duration: number): string | undefined {
-  try {
-    // Create thumbs directory if it doesn't exist
-    const thumbsDir = path.join(os.homedir(), '.movieplayer', 'thumbs');
-    if (!fs.existsSync(thumbsDir)) {
-      fs.mkdirSync(thumbsDir, { recursive: true });
-    }
-
-    // Generate unique filename based on movie path hash
-    const hash = crypto.createHash('md5').update(filePath).digest('hex');
-    const thumbPath = path.join(thumbsDir, `${hash}.jpg`);
-
-    // Skip if thumbnail already exists
-    if (fs.existsSync(thumbPath)) {
-      return thumbPath;
-    }
-
-    // Choose timestamp: second 5 if duration allows, otherwise second 0
-    const timestamp = duration > 5 ? '00:00:05' : '00:00:00';
-
-    // Generate thumbnail using ffmpeg
-    execSync(
-      `ffmpeg -ss ${timestamp} -i "${filePath}" -vf scale=-1:300 -vframes 1 "${thumbPath}" -y`,
-      { encoding: 'utf-8', timeout: 10000, stdio: 'pipe' }
-    );
-
-    return fs.existsSync(thumbPath) ? thumbPath : undefined;
-  } catch (error) {
-    console.error(`Failed to generate thumbnail for ${filePath}:`, error);
-    return undefined;
-  }
-}
-
 function traverseDirectory(
   dirPath: string,
   movies: MovieInfo[],
@@ -126,20 +74,11 @@ function traverseDirectory(
         } else if (entry.isFile() && isMovieFile(entry.name)) {
           const stats = fs.statSync(fullPath);
 
-          console.log(`Processing: ${entry.name}`);
-
-          // Get movie duration
-          const lengthSeconds = getMovieDuration(fullPath);
-
-          // Generate thumbnail
-          const thumbnailPath = generateThumbnail(fullPath, lengthSeconds);
-
           const movieInfo: MovieInfo = {
             fullPath,
             fileName: entry.name,
             accessRights: getAccessRights(stats),
-            lengthSeconds,
-            thumbnailPath
+            lengthSeconds: 0 // Would require ffprobe/ffmpeg to get actual length
           };
 
           movies.push(movieInfo);

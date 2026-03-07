@@ -25,16 +25,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className="dark" style={{ colorScheme: 'dark' }}>
       <body
-        className={cn(`${geistSans.variable} ${geistMono.variable} antialiased`,
-          "bg-red-300 w-screen h-screen overflow-hidden flex flex-col"
+        className={cn(
+          `${geistSans.variable} ${geistMono.variable} antialiased`,
+          "bg-zinc-900 text-gray-100 w-screen h-screen overflow-hidden flex flex-col",
         )}
       >
         <Menubar></Menubar>
-        <div className="h-1 grow overflow-y-auto">
-          {children}
-        </div>
+        <div className="h-1 grow overflow-y-auto flex flex-col">{children}</div>
       </body>
     </html>
   );
