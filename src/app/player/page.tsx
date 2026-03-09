@@ -1,11 +1,12 @@
 'use client';
 
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
+import { useTransitionRouter } from 'next-view-transitions';
 import { Suspense, useEffect, useState } from 'react';
 
 function PlayerContent() {
   const searchParams = useSearchParams();
-  const router = useRouter();
+  const router = useTransitionRouter();
   const moviePath = searchParams.get('movie');
   const [movieName, setMovieName] = useState('');
 

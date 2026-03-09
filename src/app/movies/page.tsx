@@ -30,7 +30,6 @@ export default async function MoviesPage(props: {
 }) {
   const searchParams = await props.searchParams;
   const search = searchParams?.search || undefined;
-  console.log(">> Rendering MoviesPage", search);
   const dbPath = path.join(os.homedir(), '.movieplayer', 'database.json');
 
   let scanResult: ScanResult | null = null;

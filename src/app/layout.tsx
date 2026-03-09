@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { ViewTransitions } from "next-view-transitions";
 import { Menubar } from "@/gui/Menubar";
 import { cn } from "@/lib/utils";
 
@@ -25,19 +26,21 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark" style={{ colorScheme: 'dark' }}>
-      <body
-        className={cn(
-          `${geistSans.variable} ${geistMono.variable} antialiased`,
-          "bg-zinc-900 text-gray-100 w-screen h-screen overflow-hidden flex flex-col",
-        )}
-      >
-        <Menubar></Menubar>
-        <div className="h-1 grow overflow-y-auto flex flex-col">
-          {children}
-        </div>
-      </body>
-    </html>
+    <ViewTransitions>
+      <html lang="en" className="dark" style={{ colorScheme: 'dark' }}>
+        <body
+          className={cn(
+            `${geistSans.variable} ${geistMono.variable} antialiased`,
+            "bg-zinc-900 text-gray-100 w-screen h-screen overflow-hidden flex flex-col",
+          )}
+        >
+          <Menubar></Menubar>
+          <div className="h-1 grow overflow-y-auto flex flex-col">
+            {children}
+          </div>
+        </body>
+      </html>
+    </ViewTransitions>
   );
 }
 

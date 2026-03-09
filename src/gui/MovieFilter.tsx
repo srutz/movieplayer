@@ -1,9 +1,9 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useTransitionRouter } from "next-view-transitions";
 
 export function MovieFilter() {
-  const router = useRouter();
+  const router = useTransitionRouter();
   return (<div className="flex gap-4 items-baseline mb-4">
     <label htmlFor="search" className="text-gray-400">Search:</label>
     <input

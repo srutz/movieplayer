@@ -1,11 +1,11 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useTransitionRouter } from "next-view-transitions";
 import { useState } from "react";
 import { Button } from "./Button";
 
 export function MainButtonBar() {
-  const router = useRouter();
+  const router = useTransitionRouter();
   const [scanning, setScanning] = useState(false);
   const [message, setMessage] = useState("");
 

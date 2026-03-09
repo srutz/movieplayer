@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
+import { useTransitionRouter } from 'next-view-transitions';
 
 function formatDuration(seconds: number): string {
   if (seconds === 0) return 'Unknown';
@@ -31,7 +31,7 @@ interface MovieCardProps {
 }
 
 export function MovieCard({ movie }: MovieCardProps) {
-  const router = useRouter();
+  const router = useTransitionRouter();
 
   const handlePlay = () => {
     // Encode the full path to pass as URL parameter
