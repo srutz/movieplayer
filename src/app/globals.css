@@ -1,3 +1,4 @@
+/** biome-ignore-all lint/correctness/noUnknownTypeSelector: <explanation> */
 @import "tailwindcss";
 
 @layer base {
@@ -71,11 +72,18 @@
   }
 }
 
-.XXXmoviecard {
-  transition: opacity .3s, transform .3s;
 
-  @starting-style {
-    opacity: 0;
-    transform: translateY(100px);
-  }
+/* View Transitions */
+.moviecard {
+  view-transition-name: auto;
+}
+
+::view-transition-group(*) {
+  animation-duration: 0.4s;
+  animation-timing-function: ease-out;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.3s;
 }
