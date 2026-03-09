@@ -70,3 +70,12 @@
     background-color: #5a6778;
   }
 }
+
+.XXXmoviecard {
+  transition: opacity .3s, transform .3s;
+
+  @starting-style {
+    opacity: 0;
+    transform: translateY(100px);
+  }
+}

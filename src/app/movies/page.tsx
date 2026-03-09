@@ -2,6 +2,7 @@ import * as fs from 'node:fs';
 import * as os from 'node:os';
 import * as path from 'node:path';
 import { MovieCard } from '@/gui/MovieCard';
+import { MovieFilter } from '@/gui/MovieFilter';
 
 // Revalidate every 5 minutes as fallback
 export const revalidate = 300;
@@ -22,8 +23,14 @@ interface ScanResult {
 
 
 
-export default async function MoviesPage() {
-  console.log(">> Rendering MoviesPage");
+export default async function MoviesPage(props: {
+  searchParams?: Promise<{
+    search?: string;
+  }>;
+}) {
+  const searchParams = await props.searchParams;
+  const search = searchParams?.search || undefined;
+  console.log(">> Rendering MoviesPage", search);
   const dbPath = path.join(os.homedir(), '.movieplayer', 'database.json');
 
   let scanResult: ScanResult | null = null;
@@ -32,6 +39,13 @@ export default async function MoviesPage() {
     if (fs.existsSync(dbPath)) {
       const data = fs.readFileSync(dbPath, 'utf-8');
       scanResult = JSON.parse(data);
+
+      if (search && scanResult?.movies) {
+        const lowerSearch = search.toLowerCase();
+        scanResult.movies = scanResult.movies.filter(movie =>
+          movie.fileName.toLowerCase().includes(lowerSearch)
+        );
+      }
     }
   } catch (error) {
     console.error('Error reading database:', error);
@@ -41,9 +55,13 @@ export default async function MoviesPage() {
     <div className="grow bg-zinc-800 flex flex-col">
       {scanResult ? (
         <>
-          <p className="px-8 text-gray-400 my-3">
-            {scanResult.movies.length} movies found • Last scanned: {new Date(scanResult.timeOfScan).toLocaleString()}
-          </p>
+          <div className="flex items-baseline gap-2 mt-4 px-8 justify-between">
+
+            <MovieFilter></MovieFilter>
+            <p className="text-gray-400 my-3">
+              {scanResult.movies.length} movies found • Last scanned: {new Date(scanResult.timeOfScan).toLocaleString()}
+            </p>
+          </div>
 
           <div className="h-1 grow overflow-y-auto flex flex-col items-center gap-4 mb-2">
             <div className="pt-2 pb-8 px-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">

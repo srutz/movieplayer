@@ -40,7 +40,7 @@ export function MovieCard({ movie }: MovieCardProps) {
   };
 
   return (
-    <div className="bg-black rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-all group">
+    <div className="moviecard bg-black rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-all group">
       {/* Preview image with play overlay */}
       <div className="w-full h-48 bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center overflow-hidden relative">
         {movie.thumbnailPath ? (
