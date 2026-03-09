@@ -33,7 +33,9 @@ export default function RootLayout({
         )}
       >
         <Menubar></Menubar>
-        <div className="h-1 grow overflow-y-auto flex flex-col">{children}</div>
+        <div className="h-1 grow overflow-y-auto flex flex-col">
+          {children}
+        </div>
       </body>
     </html>
   );
